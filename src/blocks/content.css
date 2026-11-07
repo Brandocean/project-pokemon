@@ -4,6 +4,7 @@
   margin: 0 auto;
   padding: 32px;
   flex-grow: 1;
+  min-width: 0;
 }
 
 .content__title {
@@ -31,6 +32,8 @@
 }
 
 .content__results {
+  width: 100%;
+  min-width: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 24px;
@@ -55,6 +58,13 @@
 
   .content__results {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media screen and (min-width: 545px) and (max-width: 767px) {
+  .cards__list {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 16px;
   }
 }

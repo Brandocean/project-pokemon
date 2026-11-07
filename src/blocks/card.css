@@ -6,9 +6,12 @@
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 24px;
   list-style: none;
+  width: 100%;
+  min-width: 0;
 }
 
 .card {
+  min-width: 0;
   overflow: hidden;
   border-radius: 12px;
   background-color: #fff;
