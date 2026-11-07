@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48" role="img" aria-labelledby="title">
+  <title id="title">Pokédex</title>
+  <circle cx="24" cy="24" r="20" fill="#e3350d"/>
+  <path d="M4 24h40M24 4v40" stroke="#fff" stroke-width="3"/>
+  <circle cx="24" cy="24" r="8" fill="#fff"/>
+  <circle cx="24" cy="24" r="4" fill="#e3350d"/>
+  <text x="56" y="34" fill="#1f2937" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="900">Pokédex</text>
+</svg>
