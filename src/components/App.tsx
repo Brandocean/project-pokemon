@@ -1,9 +1,15 @@
-function App() {
+import { Route, Routes } from 'react-router-dom'
+import About from './About/About'
+import NotFound from './NotFound/NotFound'
+import Pokedex from './Pokedex/Pokedex'
 
+function App() {
   return (
-    <>
-      <h1>Pokemon</h1>
-    </>
+    <Routes>
+      <Route path="/" element={<Pokedex />} />
+      <Route path="/about" element={<About />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   )
 }
 
