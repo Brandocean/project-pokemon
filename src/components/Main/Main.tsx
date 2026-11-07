@@ -1,4 +1,23 @@
+import PokemonCard from '../PokemonCard/PokemonCard'
+
 function Main() {
+  const samplePokemon = {
+    id: 25,
+    name: 'pikachu',
+    height: 4,
+    weight: 60,
+    sprites: {
+      front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+      other: {
+        'official-artwork': {
+          front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
+        },
+      },
+    },
+    stats: [],
+    types: [],
+  }
+
   return (
     <main className="content">
       <h1 className="content__title">Pokédex</h1>
@@ -10,9 +29,9 @@ function Main() {
       </section>
 
       <section className="content__results" aria-label="Resultados de Pokémon">
-        <div className="content__results-placeholder">
-          Los Pokémon aparecerán aquí.
-        </div>
+        <ul className="cards__list">
+          <PokemonCard pokemon={samplePokemon} />
+        </ul>
       </section>
     </main>
   )
