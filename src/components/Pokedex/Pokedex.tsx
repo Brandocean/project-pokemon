@@ -1,5 +1,7 @@
+import Main from '../Main/Main'
+
 function Pokedex() {
-  return <h1>Pokédex</h1>
+  return <Main />
 }
 
 export default Pokedex
