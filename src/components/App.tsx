@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
-import About from './About/About'
+import AboutAuthor from './About/About'
 import Footer from './Footer/Footer'
 import Header from './Header/Header'
 import NotFound from './NotFound/NotFound'
@@ -11,7 +11,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Pokedex />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/about" element={<AboutAuthor />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
