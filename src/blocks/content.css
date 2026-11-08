@@ -86,6 +86,37 @@
   outline-offset: 3px;
 }
 
+.pagination {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination__button {
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 8px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.pagination__button:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.pagination__button:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
+.pagination__button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
 @media screen and (max-width: 544px) {
   .content {
     padding: 24px 16px;

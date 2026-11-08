@@ -72,6 +72,18 @@ export class Api {
       list.results.map(({ url }) => this.getPokemonDetail(url)),
     );
   }
+
+  async getPokemonPage(
+    offset = 0,
+    limit = PAGE_SIZE,
+  ): Promise<{ results: PokemonDetail[]; next: string | null }> {
+    const list = await this.getPokemonList(offset, limit);
+    const results = await Promise.all(
+      list.results.map(({ url }) => this.getPokemonDetail(url)),
+    );
+
+    return { results, next: list.next };
+  }
 }
 
 export const api = new Api({

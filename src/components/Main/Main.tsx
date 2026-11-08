@@ -3,16 +3,24 @@ import PokemonCard from '../PokemonCard/PokemonCard'
 import Loader from '../Loader/Loader'
 import { api } from '../../utils/api'
 import type { PokemonDetail } from '../../types/types'
+import { PAGE_SIZE } from '../../config/constants'
 
 function Main() {
   const [pokemons, setPokemons] = useState<PokemonDetail[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [retryCount, setRetryCount] = useState(0)
+  const [offset, setOffset] = useState(PAGE_SIZE)
+  const [hasMore, setHasMore] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   useEffect(() => {
-    api.getPokemonDetails()
-      .then(setPokemons)
+    api.getPokemonPage()
+      .then(({ results, next }) => {
+        setPokemons(results)
+        setOffset(PAGE_SIZE)
+        setHasMore(Boolean(next))
+      })
       .catch((error: unknown) => {
         setError(error instanceof Error
           ? error.message
@@ -27,6 +35,29 @@ function Main() {
     setIsLoading(true)
     setError('')
     setRetryCount((currentCount) => currentCount + 1)
+  }
+
+  const handleLoadMore = () => {
+    setIsLoadingMore(true)
+    setError('')
+
+    api.getPokemonPage(offset)
+      .then(({ results, next }) => {
+        setPokemons((currentPokemons) => [
+          ...currentPokemons,
+          ...results,
+        ])
+        setOffset((currentOffset) => currentOffset + PAGE_SIZE)
+        setHasMore(Boolean(next))
+      })
+      .catch((loadError: unknown) => {
+        setError(loadError instanceof Error
+          ? loadError.message
+          : 'No se pudieron cargar más Pokémon.')
+      })
+      .finally(() => {
+        setIsLoadingMore(false)
+      })
   }
 
   return (
@@ -61,6 +92,18 @@ function Main() {
           ))}
         </ul>
       </section>
+      {hasMore && !error && (
+        <div className="pagination">
+          <button
+            className="pagination__button"
+            type="button"
+            onClick={handleLoadMore}
+            disabled={isLoadingMore || isLoading}
+          >
+            {isLoadingMore ? 'Cargando...' : 'Cargar más'}
+          </button>
+        </div>
+      )}
     </main>
   )
 }
