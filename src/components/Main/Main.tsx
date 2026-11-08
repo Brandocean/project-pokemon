@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react'
 import PokemonCard from '../PokemonCard/PokemonCard'
+import Loader from '../Loader/Loader'
 import { api } from '../../utils/api'
 import type { PokemonDetail } from '../../types/types'
 
 function Main() {
   const [pokemons, setPokemons] = useState<PokemonDetail[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     api.getPokemonDetails()
       .then(setPokemons)
       .catch((error: unknown) => {
         console.error(error)
+      })
+      .finally(() => {
+        setIsLoading(false)
       })
   }, [])
 
@@ -25,6 +30,7 @@ function Main() {
       </section>
 
       <section className="content__results" aria-label="Resultados de Pokémon">
+        {isLoading && <Loader />}
         <ul className="cards__list">
           {pokemons.map((pokemon) => (
             <PokemonCard key={pokemon.id} pokemon={pokemon} />

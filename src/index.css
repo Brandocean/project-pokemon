@@ -6,6 +6,7 @@
 @import url("./blocks/content.css");
 @import url("./blocks/card.css");
 @import url("./blocks/about.css");
+@import url("./blocks/loader.css");
 
 :root {
   font-family: "Inter", system-ui, sans-serif;
