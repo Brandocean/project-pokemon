@@ -1,17 +1,18 @@
-import { API_URL } from "../config/constants";
+import { API_URL, PAGE_SIZE } from "../config/constants";
+import type { PokemonListResponse } from "../types/types";
 
 export interface IApiOptions {
   baseUrl: string;
   headers: {
-        "Content-Type": string;
-    };
+    "Content-Type": string;
+  };
 }
 
 export class Api {
   private baseUrl: string;
   private headers: {
-        "Content-Type": string;
-    };
+    "Content-Type": string;
+  };
 
   constructor(options: IApiOptions) {
     this.baseUrl = options.baseUrl;
@@ -32,11 +33,22 @@ export class Api {
 
     return null as T;
   }
+
+  getPokemonList(
+    offset = 0,
+    limit = PAGE_SIZE,
+  ): Promise<PokemonListResponse> {
+    const url = new URL('pokemon', this.baseUrl);
+    url.searchParams.set('offset', String(offset));
+    url.searchParams.set('limit', String(limit));
+
+    return this.request<PokemonListResponse>(url.toString());
+  }
 }
 
 export const api = new Api({
   baseUrl: API_URL,
   headers: {
-        "Content-Type": "application/json"
-    }
+    "Content-Type": "application/json"
+  }
 });
