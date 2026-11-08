@@ -1,22 +1,18 @@
+import { useEffect, useState } from 'react'
 import PokemonCard from '../PokemonCard/PokemonCard'
+import { api } from '../../utils/api'
+import type { PokemonDetail } from '../../types/types'
 
 function Main() {
-  const samplePokemon = {
-    id: 25,
-    name: 'pikachu',
-    height: 4,
-    weight: 60,
-    sprites: {
-      front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
-      other: {
-        'official-artwork': {
-          front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
-        },
-      },
-    },
-    stats: [],
-    types: [],
-  }
+  const [pokemons, setPokemons] = useState<PokemonDetail[]>([])
+
+  useEffect(() => {
+    api.getPokemonDetails()
+      .then(setPokemons)
+      .catch((error: unknown) => {
+        console.error(error)
+      })
+  }, [])
 
   return (
     <main className="content">
@@ -30,7 +26,9 @@ function Main() {
 
       <section className="content__results" aria-label="Resultados de Pokémon">
         <ul className="cards__list">
-          <PokemonCard pokemon={samplePokemon} />
+          {pokemons.map((pokemon) => (
+            <PokemonCard key={pokemon.id} pokemon={pokemon} />
+          ))}
         </ul>
       </section>
     </main>
