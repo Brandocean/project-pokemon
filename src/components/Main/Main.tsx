@@ -7,17 +7,27 @@ import type { PokemonDetail } from '../../types/types'
 function Main() {
   const [pokemons, setPokemons] = useState<PokemonDetail[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [retryCount, setRetryCount] = useState(0)
 
   useEffect(() => {
     api.getPokemonDetails()
       .then(setPokemons)
       .catch((error: unknown) => {
-        console.error(error)
+        setError(error instanceof Error
+          ? error.message
+          : 'No se pudieron cargar los Pokémon.')
       })
       .finally(() => {
         setIsLoading(false)
       })
-  }, [])
+  }, [retryCount])
+
+  const handleRetry = () => {
+    setIsLoading(true)
+    setError('')
+    setRetryCount((currentCount) => currentCount + 1)
+  }
 
   return (
     <main className="content">
@@ -31,6 +41,20 @@ function Main() {
 
       <section className="content__results" aria-label="Resultados de Pokémon">
         {isLoading && <Loader />}
+        {!isLoading && error && (
+          <div className="error-message" role="alert">
+            <p className="error-message__text">
+              No se pudieron cargar los Pokémon. {error}
+            </p>
+            <button
+              className="error-message__button"
+              type="button"
+              onClick={handleRetry}
+            >
+              Reintentar
+            </button>
+          </div>
+        )}
         <ul className="cards__list">
           {pokemons.map((pokemon) => (
             <PokemonCard key={pokemon.id} pokemon={pokemon} />
