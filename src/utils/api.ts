@@ -1,5 +1,5 @@
 import { API_URL, PAGE_SIZE } from "../config/constants";
-import type { PokemonListResponse } from "../types/types";
+import type { PokemonDetail, PokemonListResponse } from "../types/types";
 
 export interface IApiOptions {
   baseUrl: string;
@@ -10,7 +10,7 @@ export interface IApiOptions {
 
 export class Api {
   private baseUrl: string;
-  private headers: {
+  readonly headers: {
     "Content-Type": string;
   };
 
@@ -20,7 +20,13 @@ export class Api {
   }
 
   private async request<T>(url: string, options?: RequestInit): Promise<T> {
-    const response = await fetch(url, options);
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        ...this.headers,
+        ...options?.headers,
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);
@@ -43,6 +49,28 @@ export class Api {
     url.searchParams.set('limit', String(limit));
 
     return this.request<PokemonListResponse>(url.toString());
+  }
+
+  getPokemonDetail(nameOrUrl: string): Promise<PokemonDetail> {
+    const url = nameOrUrl.startsWith('http')
+      ? nameOrUrl
+      : new URL(
+        `pokemon/${encodeURIComponent(nameOrUrl.toLowerCase())}`,
+        this.baseUrl,
+      ).toString();
+
+    return this.request<PokemonDetail>(url);
+  }
+
+  async getPokemonDetails(
+    offset = 0,
+    limit = PAGE_SIZE,
+  ): Promise<PokemonDetail[]> {
+    const list = await this.getPokemonList(offset, limit);
+
+    return Promise.all(
+      list.results.map(({ url }) => this.getPokemonDetail(url)),
+    );
   }
 }
 
