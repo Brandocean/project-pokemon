@@ -62,6 +62,12 @@ export class Api {
     return this.request<PokemonDetail>(url);
   }
 
+  getPokemonByName(name: string): Promise<PokemonDetail> {
+    const normalizedName = name.trim().toLowerCase();
+
+    return this.getPokemonDetail(normalizedName);
+  }
+
   async getPokemonDetails(
     offset = 0,
     limit = PAGE_SIZE,

@@ -61,7 +61,23 @@ function Main() {
       })
   }
 
-  const handleSearch = () => {
+  const handleSearch = (searchTerm: string) => {
+    setIsLoading(true)
+    setError('')
+    setHasMore(false)
+
+    api.getPokemonByName(searchTerm)
+      .then((pokemon) => {
+        setPokemons([pokemon])
+      })
+      .catch((searchError: unknown) => {
+        setError(searchError instanceof Error
+          ? searchError.message
+          : 'No se pudo encontrar el Pokémon.')
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
 
   return (
