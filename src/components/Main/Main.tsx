@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import PokemonCard from '../PokemonCard/PokemonCard'
 import Loader from '../Loader/Loader'
 import SearchForm from '../SearchForm/SearchForm'
@@ -10,33 +10,48 @@ function Main() {
   const [pokemons, setPokemons] = useState<PokemonDetail[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
   const [retryCount, setRetryCount] = useState(0)
   const [offset, setOffset] = useState(PAGE_SIZE)
   const [hasMore, setHasMore] = useState(true)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const searchRequestId = useRef(0)
+  const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
+    const requestId = ++searchRequestId.current
+
     api.getPokemonPage()
       .then(({ results, next }) => {
-        setPokemons(results)
-        setOffset(PAGE_SIZE)
-        setHasMore(Boolean(next))
+        if (requestId === searchRequestId.current) {
+          setPokemons(results)
+          setOffset(PAGE_SIZE)
+          setHasMore(Boolean(next))
+        }
       })
       .catch((error: unknown) => {
-        setError(error instanceof Error
-          ? error.message
-          : 'No se pudieron cargar los Pokémon.')
+        if (requestId === searchRequestId.current) {
+          setError(error instanceof Error
+            ? error.message
+            : 'No se pudieron cargar los Pokémon.')
+        }
       })
       .finally(() => {
-        setIsLoading(false)
+        if (requestId === searchRequestId.current) {
+          setIsLoading(false)
+        }
       })
-  }, [retryCount])
 
-  const handleRetry = () => {
-    setIsLoading(true)
-    setError('')
-    setRetryCount((currentCount) => currentCount + 1)
-  }
+    return () => {
+      if (searchTimeout.current) {
+        clearTimeout(searchTimeout.current)
+      }
+
+      if (requestId === searchRequestId.current) {
+        searchRequestId.current += 1
+      }
+    }
+  }, [retryCount])
 
   const handleLoadMore = () => {
     setIsLoadingMore(true)
@@ -62,22 +77,57 @@ function Main() {
   }
 
   const handleSearch = (searchTerm: string) => {
+    setSearchTerm(searchTerm)
+    const requestId = ++searchRequestId.current
+
+    if (searchTimeout.current) {
+      clearTimeout(searchTimeout.current)
+    }
+
+    if (!searchTerm.trim()) {
+      setError('')
+      setIsLoading(true)
+      setHasMore(true)
+      setRetryCount((currentCount) => currentCount + 1)
+      return
+    }
+
     setIsLoading(true)
     setError('')
     setHasMore(false)
+    setPokemons([])
 
-    api.getPokemonByName(searchTerm)
-      .then((pokemon) => {
-        setPokemons([pokemon])
-      })
-      .catch((searchError: unknown) => {
-        setError(searchError instanceof Error
-          ? searchError.message
-          : 'No se pudo encontrar el Pokémon.')
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
+    searchTimeout.current = setTimeout(() => {
+      api.searchPokemonByName(searchTerm)
+        .then((matches) => {
+          if (requestId === searchRequestId.current) {
+            setPokemons(matches)
+          }
+        })
+        .catch((searchError: unknown) => {
+          if (requestId === searchRequestId.current) {
+            setError(searchError instanceof Error
+              ? searchError.message
+              : 'No se pudo buscar el Pokémon.')
+          }
+        })
+        .finally(() => {
+          if (requestId === searchRequestId.current) {
+            setIsLoading(false)
+          }
+        })
+    }, 300)
+  }
+
+  const handleRetry = () => {
+    if (searchTerm.trim()) {
+      handleSearch(searchTerm)
+      return
+    }
+
+    setIsLoading(true)
+    setError('')
+    setRetryCount((currentCount) => currentCount + 1)
   }
 
   return (
@@ -103,6 +153,11 @@ function Main() {
               Reintentar
             </button>
           </div>
+        )}
+        {!isLoading && !error && !hasMore && pokemons.length === 0 && (
+          <p className="content__results-placeholder" role="status">
+            No se encontraron Pokémon con ese nombre.
+          </p>
         )}
         <ul className="cards__list">
           {pokemons.map((pokemon) => (

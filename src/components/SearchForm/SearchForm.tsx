@@ -9,7 +9,8 @@ function SearchForm({ onSearch }: SearchFormProps) {
 
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
-    onSearch(searchTerm)
+    onSearch(searchTerm.trim())
+    setSearchTerm('')
   }
 
   return (

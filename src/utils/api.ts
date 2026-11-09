@@ -1,5 +1,9 @@
 import { API_URL, PAGE_SIZE } from "../config/constants";
-import type { PokemonDetail, PokemonListResponse } from "../types/types";
+import type {
+  PokemonDetail,
+  PokemonListItem,
+  PokemonListResponse,
+} from "../types/types";
 
 export interface IApiOptions {
   baseUrl: string;
@@ -10,6 +14,7 @@ export interface IApiOptions {
 
 export class Api {
   private baseUrl: string;
+  private pokemonListPromise: Promise<PokemonListItem[]> | null = null;
   readonly headers: {
     "Content-Type": string;
   };
@@ -66,6 +71,50 @@ export class Api {
     const normalizedName = name.trim().toLowerCase();
 
     return this.getPokemonDetail(normalizedName);
+  }
+
+  private getAllPokemonNames(): Promise<PokemonListItem[]> {
+    if (!this.pokemonListPromise) {
+      this.pokemonListPromise = this.fetchAllPokemonNames().catch((error: unknown) => {
+        this.pokemonListPromise = null;
+        throw error;
+      });
+    }
+
+    return this.pokemonListPromise;
+  }
+
+  private async fetchAllPokemonNames(): Promise<PokemonListItem[]> {
+    const pokemon: PokemonListItem[] = [];
+    let nextUrl: string | null = new URL(
+      'pokemon?limit=1000',
+      this.baseUrl,
+    ).toString();
+
+    while (nextUrl) {
+      const page: PokemonListResponse = await this.request(nextUrl);
+      pokemon.push(...page.results);
+      nextUrl = page.next;
+    }
+
+    return pokemon;
+  }
+
+  async searchPokemonByName(name: string): Promise<PokemonDetail[]> {
+    const normalizedName = name.trim().toLowerCase();
+
+    if (!normalizedName) {
+      return [];
+    }
+
+    const pokemon = await this.getAllPokemonNames();
+    const matches = pokemon.filter(({ name: pokemonName }) =>
+      pokemonName.includes(normalizedName),
+    );
+
+    return Promise.all(
+      matches.map(({ url }) => this.getPokemonDetail(url)),
+    );
   }
 
   async getPokemonDetails(
