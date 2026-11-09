@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import PokemonCard from '../PokemonCard/PokemonCard'
 import Loader from '../Loader/Loader'
+import SearchForm from '../SearchForm/SearchForm'
 import { api } from '../../utils/api'
 import type { PokemonDetail } from '../../types/types'
 import { PAGE_SIZE } from '../../config/constants'
@@ -60,14 +61,15 @@ function Main() {
       })
   }
 
+  const handleSearch = () => {
+  }
+
   return (
     <main className="content">
       <h1 className="content__title">Pokédex</h1>
 
       <section className="content__search" aria-label="Buscar Pokémon">
-        <div className="content__search-placeholder">
-          Buscador de Pokémon
-        </div>
+        <SearchForm onSearch={handleSearch} />
       </section>
 
       <section className="content__results" aria-label="Resultados de Pokémon">
