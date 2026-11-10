@@ -27,7 +27,6 @@ function SearchForm({ onSearch }: SearchFormProps) {
           placeholder="Ejemplo: Pikachu"
           value={searchTerm}
           onChange={(event) => setSearchTerm(event.target.value)}
-          required
         />
         <button className="search-form__button" type="submit">
           Buscar

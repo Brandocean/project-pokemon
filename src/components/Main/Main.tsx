@@ -85,6 +85,9 @@ function Main() {
     }
 
     if (!searchTerm.trim()) {
+      setSearchTerm('')
+      setPokemons([])
+      setOffset(PAGE_SIZE)
       setError('')
       setIsLoading(true)
       setHasMore(true)
