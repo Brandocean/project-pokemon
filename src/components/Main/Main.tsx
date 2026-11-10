@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import PokemonCard from '../PokemonCard/PokemonCard'
 import Loader from '../Loader/Loader'
 import SearchForm from '../SearchForm/SearchForm'
-import { api } from '../../utils/api'
+import { ApiError, api } from '../../utils/api'
 import type { PokemonDetail } from '../../types/types'
 import { PAGE_SIZE } from '../../config/constants'
 
@@ -11,12 +11,14 @@ function Main() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [hasNoResults, setHasNoResults] = useState(false)
   const [retryCount, setRetryCount] = useState(0)
   const [offset, setOffset] = useState(PAGE_SIZE)
   const [hasMore, setHasMore] = useState(true)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const searchRequestId = useRef(0)
   const searchTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const lastSearchTerm = useRef('')
 
   useEffect(() => {
     const requestId = ++searchRequestId.current
@@ -77,7 +79,8 @@ function Main() {
   }
 
   const handleSearch = (searchTerm: string) => {
-    setSearchTerm(searchTerm)
+    lastSearchTerm.current = searchTerm
+    setSearchTerm('')
     const requestId = ++searchRequestId.current
 
     if (searchTimeout.current) {
@@ -85,10 +88,10 @@ function Main() {
     }
 
     if (!searchTerm.trim()) {
-      setSearchTerm('')
       setPokemons([])
       setOffset(PAGE_SIZE)
       setError('')
+      setHasNoResults(false)
       setIsLoading(true)
       setHasMore(true)
       setRetryCount((currentCount) => currentCount + 1)
@@ -97,6 +100,7 @@ function Main() {
 
     setIsLoading(true)
     setError('')
+    setHasNoResults(false)
     setHasMore(false)
     setPokemons([])
 
@@ -105,10 +109,16 @@ function Main() {
         .then((matches) => {
           if (requestId === searchRequestId.current) {
             setPokemons(matches)
+            setHasNoResults(matches.length === 0)
           }
         })
         .catch((searchError: unknown) => {
           if (requestId === searchRequestId.current) {
+            if (searchError instanceof ApiError && searchError.status === 404) {
+              setHasNoResults(true)
+              return
+            }
+
             setError(searchError instanceof Error
               ? searchError.message
               : 'No se pudo buscar el Pokémon.')
@@ -123,8 +133,8 @@ function Main() {
   }
 
   const handleRetry = () => {
-    if (searchTerm.trim()) {
-      handleSearch(searchTerm)
+    if (lastSearchTerm.current) {
+      handleSearch(lastSearchTerm.current)
       return
     }
 
@@ -133,12 +143,34 @@ function Main() {
     setRetryCount((currentCount) => currentCount + 1)
   }
 
+  const handleClearSearch = () => {
+    searchRequestId.current += 1
+
+    if (searchTimeout.current) {
+      clearTimeout(searchTimeout.current)
+    }
+
+    lastSearchTerm.current = ''
+    setSearchTerm('')
+    setPokemons([])
+    setOffset(PAGE_SIZE)
+    setError('')
+    setHasNoResults(false)
+    setHasMore(true)
+    setIsLoading(true)
+    setRetryCount((currentCount) => currentCount + 1)
+  }
+
   return (
     <main className="content">
       <h1 className="content__title">Pokédex</h1>
 
       <section className="content__search" aria-label="Buscar Pokémon">
-        <SearchForm onSearch={handleSearch} />
+        <SearchForm
+          searchTerm={searchTerm}
+          onSearchTermChange={setSearchTerm}
+          onSearch={handleSearch}
+        />
       </section>
 
       <section className="content__results" aria-label="Resultados de Pokémon">
@@ -158,9 +190,18 @@ function Main() {
           </div>
         )}
         {!isLoading && !error && !hasMore && pokemons.length === 0 && (
-          <p className="content__results-placeholder" role="status">
-            No se encontraron Pokémon con ese nombre.
-          </p>
+          hasNoResults && (
+            <div className="content__results-placeholder" role="status">
+              <p>No se encontraron Pokémon con ese nombre.</p>
+              <button
+                className="error-message__button"
+                type="button"
+                onClick={handleClearSearch}
+              >
+                Mostrar todos los Pokémon
+              </button>
+            </div>
+          )
         )}
         <ul className="cards__list">
           {pokemons.map((pokemon) => (

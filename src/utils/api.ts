@@ -12,6 +12,16 @@ export interface IApiOptions {
   };
 }
 
+export class ApiError extends Error {
+  readonly status: number;
+
+  constructor(status: number) {
+    super(`Error: ${status}`);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+
 export class Api {
   private baseUrl: string;
   private pokemonListPromise: Promise<PokemonListItem[]> | null = null;
@@ -34,7 +44,7 @@ export class Api {
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
+      throw new ApiError(response.status);
     }
 
     const contentType = response.headers.get("content-type");

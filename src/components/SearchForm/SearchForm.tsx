@@ -1,16 +1,19 @@
-import { useState, type SubmitEvent } from 'react'
+import type { SubmitEvent } from 'react'
 
 interface SearchFormProps {
+  searchTerm: string
+  onSearchTermChange: (searchTerm: string) => void
   onSearch: (searchTerm: string) => void
 }
 
-function SearchForm({ onSearch }: SearchFormProps) {
-  const [searchTerm, setSearchTerm] = useState('')
-
+function SearchForm({
+  searchTerm,
+  onSearchTermChange,
+  onSearch,
+}: SearchFormProps) {
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     onSearch(searchTerm.trim())
-    setSearchTerm('')
   }
 
   return (
@@ -26,7 +29,7 @@ function SearchForm({ onSearch }: SearchFormProps) {
           type="search"
           placeholder="Ejemplo: Pikachu"
           value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
+          onChange={(event) => onSearchTermChange(event.target.value)}
         />
         <button className="search-form__button" type="submit">
           Buscar
