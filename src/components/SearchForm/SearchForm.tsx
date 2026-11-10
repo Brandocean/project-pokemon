@@ -32,6 +32,15 @@ function SearchForm({
           onChange={(event) => onSearchTermChange(event.target.value)}
         />
         <button className="search-form__button" type="submit">
+          <svg
+            className="search-form__icon"
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle cx="10.8" cy="10.8" r="6.8" />
+            <path d="m16 16 5 5" />
+          </svg>
           Buscar
         </button>
       </div>

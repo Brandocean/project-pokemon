@@ -16,6 +16,7 @@
   border-radius: 12px;
   background-color: #fff;
   box-shadow: 0 4px 16px rgba(31, 41, 55, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card__button {
@@ -30,7 +31,7 @@
 }
 
 .card__button:focus-visible {
-  outline: 3px solid var(--color-primary);
+  outline: 3px solid var(--color-secondary);
   outline-offset: -3px;
 }
 
@@ -59,4 +60,11 @@
 .card__number {
   color: var(--color-muted);
   font-weight: 500;
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.14);
+  }
 }

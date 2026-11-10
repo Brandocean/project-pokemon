@@ -22,6 +22,8 @@ function PokemonCard({ pokemon, onSelect }: PokemonCardProps) {
           className="card__image"
           src={image || ''}
           alt={`Imagen oficial de ${pokemonName}`}
+          loading="lazy"
+          decoding="async"
         />
         <span className="card__description">
           <span className="card__title">{pokemonName}</span>

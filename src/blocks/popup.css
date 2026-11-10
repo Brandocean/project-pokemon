@@ -30,9 +30,20 @@
   border-radius: 50%;
   background: transparent;
   color: var(--color-text);
-  font-size: 32px;
-  line-height: 1;
   cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.popup__close svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.popup__close:hover {
+  background-color: var(--color-background);
 }
 
 .popup__close:focus-visible {
@@ -115,5 +126,11 @@
   .popup__measurements {
     gap: 16px;
     font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup__close {
+    transition-duration: 0.01ms;
   }
 }

@@ -56,7 +56,9 @@ function Popup({ isOpen, title, onClose, children }: PopupProps) {
           aria-label="Cerrar ventana"
           onClick={onClose}
         >
-          &times;
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
         </button>
         <h2 className="popup__title" id="popup-title">{title}</h2>
         {children}
