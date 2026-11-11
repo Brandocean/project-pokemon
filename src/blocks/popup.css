@@ -1,0 +1,136 @@
+.popup {
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.popup__container {
+  position: relative;
+  width: min(100%, 560px);
+  max-height: calc(100vh - 48px);
+  padding: 32px;
+  overflow-y: auto;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.popup__close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.popup__close svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.popup__close:hover {
+  background-color: var(--color-background);
+}
+
+.popup__close:focus-visible {
+  outline: 3px solid var(--color-primary);
+}
+
+.popup__title {
+  margin: 0 48px 24px 0;
+  font-size: 28px;
+  text-transform: capitalize;
+}
+
+.popup__image {
+  width: 180px;
+  height: 180px;
+  display: block;
+  margin: 0 auto 16px;
+  object-fit: contain;
+}
+
+.popup__measurements {
+  margin: 0 0 24px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  color: var(--color-muted);
+}
+
+.popup__section-title {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.popup__types {
+  margin: 0 0 24px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.popup__type {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background-color: var(--color-background);
+  text-transform: capitalize;
+}
+
+.popup__stats {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px 20px;
+  list-style: none;
+}
+
+.popup__stat {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  text-transform: capitalize;
+}
+
+@media screen and (max-width: 544px) {
+  .popup {
+    padding: 12px;
+  }
+
+  .popup__container {
+    max-height: calc(100vh - 24px);
+    padding: 24px 20px;
+  }
+
+  .popup__title {
+    font-size: 24px;
+  }
+
+  .popup__measurements {
+    gap: 16px;
+    font-size: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup__close {
+    transition-duration: 0.01ms;
+  }
+}

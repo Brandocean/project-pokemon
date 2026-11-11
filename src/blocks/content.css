@@ -1,0 +1,215 @@
+.content {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.content__title {
+  margin: 0 0 24px;
+  font-size: 36px;
+  line-height: 1.2;
+}
+
+.content__search {
+  margin-bottom: 32px;
+}
+
+.content__results-placeholder {
+  border: 1px dashed var(--color-border);
+  border-radius: 12px;
+  background-color: #fff;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.search-form {
+  padding: 24px;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: 0 4px 16px rgba(31, 41, 55, 0.08);
+}
+
+.search-form__label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.search-form__controls {
+  display: flex;
+  gap: 12px;
+}
+
+.search-form__input {
+  width: 100%;
+  min-width: 0;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-form__input:focus-visible {
+  border-color: var(--color-primary);
+  outline: 3px solid rgba(227, 53, 13, 0.2);
+  outline-offset: 1px;
+}
+
+.search-form__button {
+  flex-shrink: 0;
+  padding: 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.search-form__icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.search-form__button:focus-visible,
+.error-message__button:focus-visible,
+.pagination__button:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 3px;
+}
+
+.search-form__button:disabled,
+.error-message__button:disabled,
+.pagination__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (hover: hover) {
+  .search-form__button:hover:not(:disabled),
+  .error-message__button:hover:not(:disabled),
+  .pagination__button:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+}
+
+.content__results {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.content__results-placeholder {
+  grid-column: 1 / -1;
+  min-height: 240px;
+  padding: 32px;
+  display: grid;
+  place-items: center;
+}
+
+.error-message {
+  grid-column: 1 / -1;
+  min-height: 240px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-radius: 12px;
+  background-color: #fff;
+  text-align: center;
+}
+
+.error-message__text {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.error-message__button {
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 8px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.pagination {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination__button {
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 8px;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.pagination__button:disabled {
+  cursor: wait;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-form__input,
+  .search-form__button,
+  .error-message__button,
+  .pagination__button,
+  .card {
+    transition-duration: 0.01ms;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  .content {
+    padding: 24px 16px;
+  }
+
+  .content__title {
+    font-size: 28px;
+  }
+
+  .content__results {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .search-form__controls {
+    flex-direction: column;
+  }
+
+  .search-form__button {
+    min-height: 48px;
+  }
+}
+
+@media screen and (min-width: 545px) and (max-width: 767px) {
+  .cards__list {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+  }
+}
