@@ -4,9 +4,7 @@ Aplicación web creada con React, TypeScript y Vite que consulta la [PokéAPI](h
 
 ## Aplicación
 
-[Abrir la aplicación](https://tu-app.example.com)
-
-> Enlace provisional. Se actualizará con la URL de producción cuando se apruebe y despliegue el pull request.
+[Abrir la aplicación](https://project-pokemon-alpha.vercel.app/)
 
 ## Funcionalidades
 
