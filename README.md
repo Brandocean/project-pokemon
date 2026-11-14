@@ -26,7 +26,7 @@ Aplicación web creada con React, TypeScript y Vite que consulta la [PokéAPI](h
 ## Estructura del proyecto
 
 - `client/`: aplicación React con Vite.
-- `server/`: servidor Node.js/Express (se implementará en las siguientes etapas).
+- `server/`: servidor Node.js/Express en configuración.
 
 ## Requisitos
 
