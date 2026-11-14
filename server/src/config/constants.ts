@@ -11,5 +11,6 @@ export const ERROR_MESSAGES = {
   FORBIDDEN: 'No tienes permiso para realizar esta acción',
   NOT_FOUND: 'No se encontró el recurso solicitado',
   EMAIL_ALREADY_EXISTS: 'Ya existe una cuenta con ese correo electrónico',
+  DUPLICATE_RESOURCE: 'El recurso ya existe',
   INTERNAL_SERVER_ERROR: 'Ha ocurrido un error en el servidor',
 } as const;

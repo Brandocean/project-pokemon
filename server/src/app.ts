@@ -1,6 +1,8 @@
 import cors from 'cors'
 import express from 'express'
 import mongoose from 'mongoose'
+import { errorHandler } from './middleware/error-handler.js'
+import notFound from './middleware/not-found.js'
 
 const mongoUri = process.env.MONGO_URI
 const clientOrigin = process.env.CLIENT_ORIGIN
@@ -31,6 +33,9 @@ app.get('/health', (_req, res) => {
     error: null,
   })
 })
+
+app.use(notFound)
+app.use(errorHandler)
 
 const startServer = async (): Promise<void> => {
   await mongoose.connect(mongoUri, { maxPoolSize: 10 })

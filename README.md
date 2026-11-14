@@ -48,6 +48,10 @@ Antes de iniciar el servidor, configura `server/.env` con tus valores locales: `
 
 La variable `VITE_API_URL` configura la URL base de la API. El ejemplo de configuración está en `client/.env.example`; el valor predeterminado es `https://pokeapi.co/api/v2/`.
 
+## Errores de la API
+
+El servidor responde los errores con `{ "message": "..." }`. Los datos inválidos y errores de formato de identificador producen `400`; las rutas inexistentes, `404`; los registros duplicados, `409`; y los errores internos, `500` con un mensaje genérico, sin detalles de la base de datos.
+
 ## Comandos disponibles
 
 ```bash
