@@ -26,7 +26,7 @@ Aplicación web creada con React, TypeScript y Vite que consulta la [PokéAPI](h
 ## Estructura del proyecto
 
 - `client/`: aplicación React con Vite.
-- `server/`: servidor Node.js/Express en configuración.
+- `server/`: servidor Node.js, Express y TypeScript, preparado para conectar con MongoDB Atlas.
 
 ## Requisitos
 
@@ -42,7 +42,7 @@ cp -n server/.env.example server/.env
 npm run dev:client
 ```
 
-Vite muestra la dirección local en la terminal (por defecto, `http://localhost:3000`). Para iniciar el servidor cuando esté implementado, usa `npm run dev:server`.
+Vite muestra la dirección local en la terminal (por defecto, `http://localhost:3000`). Cuando el servidor Atlas esté configurado, inicia el backend en otra terminal con `npm run dev:server`.
 
 Antes de iniciar el servidor, configura `server/.env` con tus valores locales: `MONGO_URI`, `PORT`, `JWT_SECRET` y `CLIENT_ORIGIN`. La URI de MongoDB y el secreto JWT no deben compartirse ni subirse al repositorio. El servidor carga estas variables mediante `dotenv`.
 
