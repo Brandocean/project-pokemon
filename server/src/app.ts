@@ -24,6 +24,14 @@ app.set('trust proxy', 1)
 app.use(cors({ origin: clientOrigin }))
 app.use(express.json())
 
+app.get('/health', (_req, res) => {
+  res.status(200).json({
+    success: true,
+    data: { status: 'ok' },
+    error: null,
+  })
+})
+
 const startServer = async (): Promise<void> => {
   await mongoose.connect(mongoUri, { maxPoolSize: 10 })
   app.listen(port, () => {
