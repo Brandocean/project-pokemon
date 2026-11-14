@@ -23,31 +23,35 @@ Aplicación web creada con React, TypeScript y Vite que consulta la [PokéAPI](h
 - React Router
 - PokéAPI
 
+## Estructura del proyecto
+
+- `client/`: aplicación React con Vite.
+- `server/`: servidor Node.js/Express (se implementará en las siguientes etapas).
+
 ## Requisitos
 
 - Node.js y npm instalados.
 
 ## Instalación y ejecución
 
-Desde esta carpeta (`project-pokemon`):
+Desde la raíz de este repositorio:
 
 ```bash
-npm install
-cp .env.example .env
-npm run dev
+npm run install:all
+npm run dev:client
 ```
 
-Vite muestra la dirección local en la terminal (por defecto, `http://localhost:3000`).
+Vite muestra la dirección local en la terminal (por defecto, `http://localhost:3000`). Para iniciar el servidor cuando esté implementado, usa `npm run dev:server`.
 
-La variable `VITE_API_URL` configura la URL base de la API. El valor predeterminado es `https://pokeapi.co/api/v2/`, así que el archivo `.env` es opcional si se usa la PokéAPI pública.
+La variable `VITE_API_URL` configura la URL base de la API. El ejemplo de configuración está en `client/.env.example`; el valor predeterminado es `https://pokeapi.co/api/v2/`.
 
 ## Comandos disponibles
 
 ```bash
-npm run dev      # Inicia el servidor de desarrollo
+cd client
 npm run lint     # Ejecuta ESLint
 npm run build    # Verifica TypeScript y genera la versión de producción
 npm run preview  # Sirve localmente la compilación de producción
 ```
 
-La compilación se genera en `dist/`.
+La compilación del cliente se genera en `client/dist/`.
