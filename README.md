@@ -38,10 +38,13 @@ Desde la raíz de este repositorio:
 
 ```bash
 npm run install:all
+cp -n server/.env.example server/.env
 npm run dev:client
 ```
 
 Vite muestra la dirección local en la terminal (por defecto, `http://localhost:3000`). Para iniciar el servidor cuando esté implementado, usa `npm run dev:server`.
+
+Antes de iniciar el servidor, configura `server/.env` con tus valores locales: `MONGO_URI`, `PORT`, `JWT_SECRET` y `CLIENT_ORIGIN`. La URI de MongoDB y el secreto JWT no deben compartirse ni subirse al repositorio. El servidor carga estas variables mediante `dotenv`.
 
 La variable `VITE_API_URL` configura la URL base de la API. El ejemplo de configuración está en `client/.env.example`; el valor predeterminado es `https://pokeapi.co/api/v2/`.
 
