@@ -70,6 +70,10 @@ Requiere `Authorization: Bearer <token>`. Responde `200` con `_id`, `email` y `n
 
 Requiere `Authorization: Bearer <token>`. Responde `200` con la lista de favoritos del usuario autenticado (vacía si no tiene); nunca incluye favoritos de otros usuarios. Cada elemento contiene `_id`, `pokemonId`, `name`, `image` y `types`.
 
+### `POST /favorites`
+
+Requiere `Authorization: Bearer <token>` y un JSON con `pokemonId` (entero positivo), `name`, `image` (URL HTTP/HTTPS) y `types` (lista de nombres de tipos). El servidor asigna el propietario desde el token e ignora cualquier `owner` enviado en el cuerpo. Responde `201` con el favorito creado; datos inválidos producen `400` y si ese Pokémon ya es favorito del usuario, `409`.
+
 ## Comandos disponibles
 
 ```bash

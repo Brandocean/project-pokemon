@@ -9,9 +9,7 @@ import {
 } from '../config/constants.js'
 import { AppError } from '../middleware/error-handler.js'
 import User from '../models/User.js'
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value)
+import { isRecord } from '../utils/validation.js'
 
 export const signup: RequestHandler = async (req, res) => {
   const body: unknown = req.body
