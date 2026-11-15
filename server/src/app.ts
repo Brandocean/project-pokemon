@@ -5,6 +5,7 @@ import { signin, signup } from './controllers/auth.js'
 import { errorHandler } from './middleware/error-handler.js'
 import { signinLimiter, signupLimiter } from './middleware/limiter.js'
 import notFound from './middleware/not-found.js'
+import router from './routes/index.js'
 
 const mongoUri = process.env.MONGO_URI
 const clientOrigin = process.env.CLIENT_ORIGIN
@@ -38,6 +39,7 @@ app.get('/health', (_req, res) => {
 
 app.post('/signup', signupLimiter, signup)
 app.post('/signin', signinLimiter, signin)
+app.use(router)
 
 app.use(notFound)
 app.use(errorHandler)

@@ -62,6 +62,10 @@ Recibe `email` y `password`. Responde `200` con `{ "token": "..." }`; el JWT con
 
 Ambos endpoints limitan solicitudes por IP: `/signin` permite 10 cada 15 minutos y `/signup`, 20 por hora. Al exceder el límite, responden `429` con `{ "message": "..." }`.
 
+### `GET /users/me`
+
+Requiere `Authorization: Bearer <token>`. Responde `200` con `_id`, `email` y `name` del usuario asociado; si el usuario ya no existe, responde `404`. Sin un token válido, responde `401`.
+
 ## Comandos disponibles
 
 ```bash
