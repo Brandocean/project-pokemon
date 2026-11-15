@@ -66,6 +66,10 @@ Ambos endpoints limitan solicitudes por IP: `/signin` permite 10 cada 15 minutos
 
 Requiere `Authorization: Bearer <token>`. Responde `200` con `_id`, `email` y `name` del usuario asociado; si el usuario ya no existe, responde `404`. Sin un token válido, responde `401`.
 
+### `GET /favorites`
+
+Requiere `Authorization: Bearer <token>`. Responde `200` con la lista de favoritos del usuario autenticado (vacía si no tiene); nunca incluye favoritos de otros usuarios. Cada elemento contiene `_id`, `pokemonId`, `name`, `image` y `types`.
+
 ## Comandos disponibles
 
 ```bash
