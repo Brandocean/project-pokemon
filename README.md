@@ -56,6 +56,10 @@ El servidor responde los errores con `{ "message": "..." }`. Los datos inválido
 
 Recibe `email`, `password` y `name` como cadenas JSON. La contraseña debe tener al menos 8 caracteres. Responde `201` con `_id`, `email` y `name`; nunca devuelve la contraseña. Los datos inválidos producen `400` y un correo duplicado produce `409`.
 
+### `POST /signin`
+
+Recibe `email` y `password`. Responde `200` con `{ "token": "..." }`; el JWT contiene solo `_id` y expira en 7 días. Si el correo o la contraseña no coinciden, o faltan credenciales válidas, responde `401` con el mismo mensaje genérico.
+
 ## Comandos disponibles
 
 ```bash
