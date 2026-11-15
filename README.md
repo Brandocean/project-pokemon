@@ -58,7 +58,7 @@ Recibe `email`, `password` y `name` como cadenas JSON. La contraseña debe tener
 
 ### `POST /signin`
 
-Recibe `email` y `password`. Responde `200` con `{ "token": "..." }`; el JWT contiene solo `_id` y expira en 7 días. Si el correo o la contraseña no coinciden, o faltan credenciales válidas, responde `401` con el mismo mensaje genérico.
+Recibe `email` y `password`. Responde `200` con `{ "token": "..." }`; el JWT contiene solo `_id` y expira en 7 días. Si el correo o la contraseña no coinciden, o faltan credenciales válidas, responde `401` con el mismo mensaje genérico. En rutas protegidas, envía el token en `Authorization: Bearer <token>`; un token faltante o inválido responde `401`.
 
 Ambos endpoints limitan solicitudes por IP: `/signin` permite 10 cada 15 minutos y `/signup`, 20 por hora. Al exceder el límite, responden `429` con `{ "message": "..." }`.
 
