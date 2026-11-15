@@ -3,6 +3,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import { signin, signup } from './controllers/auth.js'
 import { errorHandler } from './middleware/error-handler.js'
+import { signinLimiter, signupLimiter } from './middleware/limiter.js'
 import notFound from './middleware/not-found.js'
 
 const mongoUri = process.env.MONGO_URI
@@ -35,8 +36,8 @@ app.get('/health', (_req, res) => {
   })
 })
 
-app.post('/signup', signup)
-app.post('/signin', signin)
+app.post('/signup', signupLimiter, signup)
+app.post('/signin', signinLimiter, signin)
 
 app.use(notFound)
 app.use(errorHandler)
