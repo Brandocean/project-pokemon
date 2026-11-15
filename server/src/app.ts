@@ -1,6 +1,7 @@
 import cors from 'cors'
 import express from 'express'
 import mongoose from 'mongoose'
+import { signup } from './controllers/auth.js'
 import { errorHandler } from './middleware/error-handler.js'
 import notFound from './middleware/not-found.js'
 
@@ -33,6 +34,8 @@ app.get('/health', (_req, res) => {
     error: null,
   })
 })
+
+app.post('/signup', signup)
 
 app.use(notFound)
 app.use(errorHandler)

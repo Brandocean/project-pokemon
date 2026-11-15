@@ -52,6 +52,10 @@ La variable `VITE_API_URL` configura la URL base de la API. El ejemplo de config
 
 El servidor responde los errores con `{ "message": "..." }`. Los datos inválidos y errores de formato de identificador producen `400`; las rutas inexistentes, `404`; los registros duplicados, `409`; y los errores internos, `500` con un mensaje genérico, sin detalles de la base de datos.
 
+### `POST /signup`
+
+Recibe `email`, `password` y `name` como cadenas JSON. La contraseña debe tener al menos 8 caracteres. Responde `201` con `_id`, `email` y `name`; nunca devuelve la contraseña. Los datos inválidos producen `400` y un correo duplicado produce `409`.
+
 ## Comandos disponibles
 
 ```bash

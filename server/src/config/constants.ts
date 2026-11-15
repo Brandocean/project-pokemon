@@ -6,6 +6,7 @@ export const MIN_PASSWORD_LENGTH = 8;
 
 export const ERROR_MESSAGES = {
   INVALID_REQUEST: 'La solicitud contiene datos inválidos',
+  REQUIRED_SIGNUP_FIELDS: 'Los campos email, password y name son obligatorios',
   AUTHENTICATION_REQUIRED: 'Se requiere autenticación',
   INVALID_CREDENTIALS: 'Credenciales inválidas',
   FORBIDDEN: 'No tienes permiso para realizar esta acción',
