@@ -46,7 +46,7 @@ Vite muestra la dirección local en la terminal (por defecto, `http://localhost:
 
 Antes de iniciar el servidor, configura `server/.env` con tus valores locales: `MONGO_URI`, `PORT`, `JWT_SECRET` y `CLIENT_ORIGIN`. La URI de MongoDB y el secreto JWT no deben compartirse ni subirse al repositorio. El servidor carga estas variables mediante `dotenv`.
 
-La variable `VITE_API_URL` configura la URL base de la API. El ejemplo de configuración está en `client/.env.example`; el valor predeterminado es `https://pokeapi.co/api/v2/`.
+`client/.env.example` incluye las URL base para desarrollo local: `VITE_API_URL` apunta al backend (`http://localhost:3001`) y `VITE_POKE_API_URL` a PokéAPI (`https://pokeapi.co/api/v2/`). Configura `VITE_API_URL` con la URL del backend cuando este esté desplegado.
 
 ## Errores de la API
 

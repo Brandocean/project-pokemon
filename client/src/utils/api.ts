@@ -1,4 +1,4 @@
-import { API_URL, PAGE_SIZE } from "../config/constants";
+import { PAGE_SIZE, POKE_API_URL } from "../config/constants";
 import type {
   PokemonDetail,
   PokemonListItem,
@@ -152,7 +152,7 @@ export class Api {
 }
 
 export const api = new Api({
-  baseUrl: API_URL,
+  baseUrl: POKE_API_URL,
   headers: {
     "Content-Type": "application/json"
   }

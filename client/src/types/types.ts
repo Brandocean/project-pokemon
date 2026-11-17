@@ -1,3 +1,21 @@
+export interface AuthResponse {
+  token: string;
+}
+
+export interface UserProfile {
+  _id: string;
+  email: string;
+  name: string;
+}
+
+export interface FavoriteData {
+  _id: string;
+  pokemonId: number;
+  name: string;
+  image: string;
+  types: string[];
+}
+
 export interface PokemonListResponse {
   count: number;
   next: string | null;
