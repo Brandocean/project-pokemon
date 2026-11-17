@@ -1,9 +1,14 @@
 import { Router } from 'express'
-import { createFavorite, getFavorites } from '../controllers/favorites.js'
+import {
+  createFavorite,
+  deleteFavorite,
+  getFavorites,
+} from '../controllers/favorites.js'
 
 const favoritesRouter = Router()
 
 favoritesRouter.get('/', getFavorites)
 favoritesRouter.post('/', createFavorite)
+favoritesRouter.delete('/:id', deleteFavorite)
 
 export { favoritesRouter }

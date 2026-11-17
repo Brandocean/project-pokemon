@@ -74,6 +74,10 @@ Requiere `Authorization: Bearer <token>`. Responde `200` con la lista de favorit
 
 Requiere `Authorization: Bearer <token>` y un JSON con `pokemonId` (entero positivo), `name`, `image` (URL HTTP/HTTPS) y `types` (lista de nombres de tipos). El servidor asigna el propietario desde el token e ignora cualquier `owner` enviado en el cuerpo. Responde `201` con el favorito creado; datos inválidos producen `400` y si ese Pokémon ya es favorito del usuario, `409`.
 
+### `DELETE /favorites/:id`
+
+Requiere `Authorization: Bearer <token>`. El `id` debe ser un ObjectId válido. Si el favorito pertenece al usuario, se elimina y responde `200` con el registro eliminado; devuelve `400` si el id es inválido, `403` si pertenece a otro usuario y `404` si no existe.
+
 ## Comandos disponibles
 
 ```bash

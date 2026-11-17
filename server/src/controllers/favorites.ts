@@ -60,3 +60,30 @@ export const createFavorite: RequestHandler = async (req, res) => {
     types: favorite.types,
   })
 }
+
+export const deleteFavorite: RequestHandler = async (req, res) => {
+  const owner = req.user?._id
+  if (!owner) {
+    throw new AppError(ERROR_MESSAGES.AUTHENTICATION_REQUIRED, 401)
+  }
+
+  const { id } = req.params
+  if (typeof id !== 'string' || !/^[\da-f]{24}$/i.test(id)) {
+    throw new AppError(ERROR_MESSAGES.INVALID_REQUEST, 400)
+  }
+
+  const favorite = await Favorite.findOneAndDelete({ _id: id, owner })
+    .select('_id pokemonId name image types')
+    .lean()
+
+  if (!favorite) {
+    const exists = await Favorite.exists({ _id: id })
+    if (exists) {
+      throw new AppError(ERROR_MESSAGES.FORBIDDEN, 403)
+    }
+
+    throw new AppError(ERROR_MESSAGES.NOT_FOUND, 404)
+  }
+
+  res.status(200).json(favorite)
+}
