@@ -6,6 +6,7 @@ import Header from './Header/Header'
 import NotFound from './NotFound/NotFound'
 import Pokedex from './Pokedex/Pokedex'
 import Register from './Register/Register'
+import Login from './Login/Login'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Pokedex />} />
           <Route path="/about" element={<AboutAuthor />} />
           <Route path="/signup" element={<Register />} />
+          <Route path="/signin" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
