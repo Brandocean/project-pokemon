@@ -7,6 +7,9 @@ import NotFound from './NotFound/NotFound'
 import Pokedex from './Pokedex/Pokedex'
 import Register from './Register/Register'
 import Login from './Login/Login'
+import Favorites from './Favorites/Favorites'
+import ProtectedRoute from './ProtectedRoute/ProtectedRoute'
+import PublicRoute from './PublicRoute/PublicRoute'
 
 function App() {
   return (
@@ -16,8 +19,13 @@ function App() {
         <Routes>
           <Route path="/" element={<Pokedex />} />
           <Route path="/about" element={<AboutAuthor />} />
-          <Route path="/signup" element={<Register />} />
-          <Route path="/signin" element={<Login />} />
+          <Route element={<PublicRoute />}>
+            <Route path="/signup" element={<Register />} />
+            <Route path="/signin" element={<Login />} />
+          </Route>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/favorites" element={<Favorites />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
