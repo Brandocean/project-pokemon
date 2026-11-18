@@ -1,7 +1,16 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useCurrentUser } from '../../contexts/CurrentUserContext'
 import logo from '../../images/logo.svg'
 
 function Header() {
+  const { isAuthenticated, isLoading, logout } = useCurrentUser()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
   return (
     <header className="header">
       <NavLink to="/" className="header__logo-link" aria-label="Ir a la Pokédex">
@@ -29,6 +38,34 @@ function Header() {
         >
           Sobre el autor
         </NavLink>
+        {!isLoading && (isAuthenticated ? (
+          <>
+            <NavLink
+              to="/favorites"
+              className={({ isActive }) =>
+                `header__link${isActive ? ' header__link_active' : ''}`
+              }
+            >
+              Favoritos
+            </NavLink>
+            <button
+              className="header__logout"
+              type="button"
+              onClick={handleLogout}
+            >
+              Cerrar sesión
+            </button>
+          </>
+        ) : (
+          <NavLink
+            to="/signin"
+            className={({ isActive }) =>
+              `header__link${isActive ? ' header__link_active' : ''}`
+            }
+          >
+            Iniciar sesión
+          </NavLink>
+        ))}
       </nav>
     </header>
   )
