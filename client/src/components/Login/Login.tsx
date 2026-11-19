@@ -2,6 +2,7 @@ import { useState, type SubmitEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
 import { getCurrentUser, loginUser } from '../../utils/auth'
+import { useToast } from '../../contexts/ToastContext'
 
 interface LoginFormData {
   email: string
@@ -14,6 +15,7 @@ const initialFormData: LoginFormData = {
 }
 
 function Login() {
+  const { notify } = useToast()
   const [formData, setFormData] = useState(initialFormData)
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -29,13 +31,14 @@ function Login() {
       const { token } = await loginUser(formData)
       const user = await getCurrentUser(token)
       login(user, token)
+      notify(`Sesión iniciada. Bienvenido, ${user.name}.`)
       navigate('/')
     } catch (error: unknown) {
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : 'No se pudo iniciar sesión. Inténtalo de nuevo.',
-      )
+      const message = error instanceof Error
+        ? error.message
+        : 'No se pudo iniciar sesión. Inténtalo de nuevo.'
+      setErrorMessage(message)
+      notify(message, 'error')
     } finally {
       setIsLoading(false)
     }

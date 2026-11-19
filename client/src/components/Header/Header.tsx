@@ -1,13 +1,16 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
+import { useToast } from '../../contexts/ToastContext'
 import logo from '../../images/logo.svg'
 
 function Header() {
   const { isAuthenticated, isLoading, logout } = useCurrentUser()
+  const { notify } = useToast()
   const navigate = useNavigate()
 
   const handleLogout = () => {
     logout()
+    notify('Sesión cerrada.')
     navigate('/signin')
   }
 

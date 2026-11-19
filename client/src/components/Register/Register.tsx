@@ -1,6 +1,7 @@
 import { useState, type SubmitEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { registerUser } from '../../utils/auth'
+import { useToast } from '../../contexts/ToastContext'
 
 interface RegisterFormData {
   name: string
@@ -15,6 +16,7 @@ const initialFormData: RegisterFormData = {
 }
 
 function Register() {
+  const { notify } = useToast()
   const [formData, setFormData] = useState(initialFormData)
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -29,13 +31,14 @@ function Register() {
     try {
       const user = await registerUser(formData)
       setSuccessMessage(`Registro exitoso, ${user.name}. Ya puedes iniciar sesión.`)
+      notify(`Registro exitoso. Ya puedes iniciar sesión, ${user.name}.`)
       setFormData(initialFormData)
     } catch (error: unknown) {
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : 'No se pudo completar el registro. Inténtalo de nuevo.',
-      )
+      const message = error instanceof Error
+        ? error.message
+        : 'No se pudo completar el registro. Inténtalo de nuevo.'
+      setErrorMessage(message)
+      notify(message, 'error')
     } finally {
       setIsLoading(false)
     }

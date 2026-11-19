@@ -11,6 +11,8 @@ import Favorites from './Favorites/Favorites'
 import ProtectedRoute from './ProtectedRoute/ProtectedRoute'
 import PublicRoute from './PublicRoute/PublicRoute'
 import { useCurrentUser } from '../contexts/CurrentUserContext'
+import { ToastProvider } from '../contexts/ToastProvider'
+import InfoTooltip from './InfoTooltip/InfoTooltip'
 
 function AppContent() {
   const { isAuthenticated, isLoading } = useCurrentUser()
@@ -31,6 +33,7 @@ function AppContent() {
         </Route>
       </Routes>
       {!isLoading && isAuthenticated && <Footer />}
+      <InfoTooltip />
     </div>
   )
 }
@@ -38,7 +41,9 @@ function AppContent() {
 function App() {
   return (
     <CurrentUserProvider>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </CurrentUserProvider>
   )
 }

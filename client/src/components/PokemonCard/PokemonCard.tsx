@@ -4,6 +4,7 @@ import { useCurrentUser } from '../../contexts/CurrentUserContext'
 import type { PokemonDetail } from '../../types/types'
 import { addFavorite } from '../../utils/backendApi'
 import { ApiRequestError } from '../../utils/apiRequest'
+import { useToast } from '../../contexts/ToastContext'
 
 interface PokemonCardProps {
   pokemon: PokemonDetail
@@ -11,6 +12,7 @@ interface PokemonCardProps {
 }
 
 function PokemonCard({ pokemon, onSelect }: PokemonCardProps) {
+  const { notify } = useToast()
   const [isSaving, setIsSaving] = useState(false)
   const [favoriteError, setFavoriteError] = useState('')
   const [favoriteSaved, setFavoriteSaved] = useState(false)
@@ -37,9 +39,11 @@ function PokemonCard({ pokemon, onSelect }: PokemonCardProps) {
         types: pokemon.types.map(({ type }) => type.name),
       })
       setFavoriteSaved(true)
+      notify(`${pokemonName} se agregó a tus favoritos.`)
     } catch (error: unknown) {
       if (error instanceof ApiRequestError && error.status === 401) {
         setFavoriteError('Tu sesión expiró. Inicia sesión nuevamente.')
+        notify('Tu sesión expiró. Inicia sesión nuevamente.', 'error')
         logout()
         navigate('/signin')
         return
@@ -48,13 +52,14 @@ function PokemonCard({ pokemon, onSelect }: PokemonCardProps) {
         error instanceof ApiRequestError && error.status === 409
       ) {
         setFavoriteError('Este Pokémon ya está guardado en tus favoritos.')
+        notify('Este Pokémon ya está guardado en tus favoritos.', 'error')
         setFavoriteSaved(true)
       } else {
-        setFavoriteError(
-          error instanceof Error
-            ? error.message
-            : 'No se pudo guardar el Pokémon.',
-        )
+        const message = error instanceof Error
+          ? error.message
+          : 'No se pudo guardar el Pokémon.'
+        setFavoriteError(message)
+        notify(message, 'error')
       }
     } finally {
       setIsSaving(false)

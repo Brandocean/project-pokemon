@@ -5,8 +5,10 @@ import type { FavoriteData } from '../../types/types'
 import { ApiRequestError } from '../../utils/apiRequest'
 import { getFavorites, removeFavorite } from '../../utils/backendApi'
 import Loader from '../Loader/Loader'
+import { useToast } from '../../contexts/ToastContext'
 
 function Favorites() {
+  const { notify } = useToast()
   const [favorites, setFavorites] = useState<FavoriteData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
@@ -32,15 +34,16 @@ function Favorites() {
 
         if (error instanceof ApiRequestError && error.status === 401) {
           logout()
+          notify('Tu sesión expiró. Inicia sesión nuevamente.', 'error')
           navigate('/signin', { replace: true })
           return
         }
 
-        setErrorMessage(
-          error instanceof Error
-            ? error.message
-            : 'No se pudieron cargar tus favoritos.',
-        )
+        const message = error instanceof Error
+          ? error.message
+          : 'No se pudieron cargar tus favoritos.'
+        setErrorMessage(message)
+        notify(message, 'error')
       })
       .finally(() => {
         if (isActive) {
@@ -51,7 +54,7 @@ function Favorites() {
     return () => {
       isActive = false
     }
-  }, [logout, navigate, retryCount])
+  }, [logout, navigate, notify, retryCount])
 
   const handleRetry = () => {
     setIsLoading(true)
@@ -68,6 +71,9 @@ function Favorites() {
       setFavorites((currentFavorites) =>
         currentFavorites.filter((item) => item._id !== favorite._id),
       )
+      const removedName = favorite.name.charAt(0).toUpperCase()
+        + favorite.name.slice(1)
+      notify(`${removedName} se eliminó de tus favoritos.`)
     } catch (error: unknown) {
       if (error instanceof ApiRequestError && error.status === 401) {
         logout()
@@ -77,17 +83,19 @@ function Favorites() {
 
       if (error instanceof ApiRequestError && error.status === 403) {
         setRemovalMessage('No puedes eliminar un favorito que no te pertenece.')
+        notify('No puedes eliminar un favorito que no te pertenece.', 'error')
       } else if (error instanceof ApiRequestError && error.status === 404) {
         setRemovalMessage('El favorito ya no existe.')
+        notify('El favorito ya no existe.', 'error')
         setFavorites((currentFavorites) =>
           currentFavorites.filter((item) => item._id !== favorite._id),
         )
       } else {
-        setRemovalMessage(
-          error instanceof Error
-            ? error.message
-            : 'No se pudo eliminar el favorito.',
-        )
+        const message = error instanceof Error
+          ? error.message
+          : 'No se pudo eliminar el favorito.'
+        setRemovalMessage(message)
+        notify(message, 'error')
       }
     } finally {
       setRemovingId(null)
