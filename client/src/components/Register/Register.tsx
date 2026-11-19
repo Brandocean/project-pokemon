@@ -108,6 +108,12 @@ function Register() {
             {isLoading ? 'Creando cuenta…' : 'Registrarse'}
           </button>
         </form>
+        <p className="auth-form__alternate">
+          ¿Ya tienes cuenta?{' '}
+          <Link className="auth-form__link" to="/signin">
+            Iniciar sesión
+          </Link>
+        </p>
         {successMessage && (
           <p className="register__message register__message_success" role="status">
             {successMessage}{' '}
