@@ -2,6 +2,16 @@ import { API_URL } from '../config/constants';
 
 type JsonRecord = Record<string, unknown>;
 
+export class ApiRequestError extends Error {
+  readonly status: number
+
+  constructor(message: string, status: number) {
+    super(message)
+    this.name = 'ApiRequestError'
+    this.status = status
+  }
+}
+
 const isJsonRecord = (value: unknown): value is JsonRecord =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -22,7 +32,7 @@ export async function apiRequest<T>(
       }
     }
 
-    throw new Error(message);
+    throw new ApiRequestError(message, response.status);
   }
 
   return await response.json() as T;

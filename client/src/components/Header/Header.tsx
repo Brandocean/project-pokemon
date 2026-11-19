@@ -8,7 +8,7 @@ function Header() {
 
   const handleLogout = () => {
     logout()
-    navigate('/')
+    navigate('/signin')
   }
 
   return (

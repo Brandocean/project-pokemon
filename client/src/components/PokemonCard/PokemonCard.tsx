@@ -1,4 +1,9 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useCurrentUser } from '../../contexts/CurrentUserContext'
 import type { PokemonDetail } from '../../types/types'
+import { addFavorite } from '../../utils/backendApi'
+import { ApiRequestError } from '../../utils/apiRequest'
 
 interface PokemonCardProps {
   pokemon: PokemonDetail
@@ -6,9 +11,55 @@ interface PokemonCardProps {
 }
 
 function PokemonCard({ pokemon, onSelect }: PokemonCardProps) {
+  const [isSaving, setIsSaving] = useState(false)
+  const [favoriteError, setFavoriteError] = useState('')
+  const [favoriteSaved, setFavoriteSaved] = useState(false)
+  const { isAuthenticated, isLoading, logout } = useCurrentUser()
+  const navigate = useNavigate()
   const image = pokemon.sprites.other?.['official-artwork']?.front_default
     || pokemon.sprites.front_default
   const pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)
+
+  const handleSaveFavorite = async () => {
+    if (!isAuthenticated) {
+      navigate('/signin')
+      return
+    }
+
+    setIsSaving(true)
+    setFavoriteError('')
+
+    try {
+      await addFavorite({
+        pokemonId: pokemon.id,
+        name: pokemon.name,
+        image: image || '',
+        types: pokemon.types.map(({ type }) => type.name),
+      })
+      setFavoriteSaved(true)
+    } catch (error: unknown) {
+      if (error instanceof ApiRequestError && error.status === 401) {
+        setFavoriteError('Tu sesión expiró. Inicia sesión nuevamente.')
+        logout()
+        navigate('/signin')
+        return
+      }
+      if (
+        error instanceof ApiRequestError && error.status === 409
+      ) {
+        setFavoriteError('Este Pokémon ya está guardado en tus favoritos.')
+        setFavoriteSaved(true)
+      } else {
+        setFavoriteError(
+          error instanceof Error
+            ? error.message
+            : 'No se pudo guardar el Pokémon.',
+        )
+      }
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   return (
     <li className="card">
@@ -32,6 +83,35 @@ function PokemonCard({ pokemon, onSelect }: PokemonCardProps) {
           </span>
         </span>
       </button>
+      {!isLoading && (
+        isAuthenticated ? (
+          <button
+            className="card__favorite-button"
+            type="button"
+            disabled={isSaving || favoriteSaved}
+            onClick={handleSaveFavorite}
+          >
+            {isSaving
+              ? 'Guardando...'
+              : favoriteSaved
+                ? 'Guardado'
+                : 'Guardar en favoritos'}
+          </button>
+        ) : (
+          <button
+            className="card__favorite-button"
+            type="button"
+            onClick={handleSaveFavorite}
+          >
+            Iniciar sesión para guardar
+          </button>
+        )
+      )}
+      {favoriteError && (
+        <p className="card__favorite-message" role="alert">
+          {favoriteError}
+        </p>
+      )}
     </li>
   )
 }
