@@ -83,35 +83,37 @@ function PokemonCard({ pokemon, onSelect }: PokemonCardProps) {
           </span>
         </span>
       </button>
-      {!isLoading && (
-        isAuthenticated ? (
-          <button
-            className="card__favorite-button"
-            type="button"
-            disabled={isSaving || favoriteSaved}
-            onClick={handleSaveFavorite}
-          >
-            {isSaving
-              ? 'Guardando...'
-              : favoriteSaved
-                ? 'Guardado'
-                : 'Guardar en favoritos'}
-          </button>
-        ) : (
-          <button
-            className="card__favorite-button"
-            type="button"
-            onClick={handleSaveFavorite}
-          >
-            Iniciar sesión para guardar
-          </button>
-        )
-      )}
-      {favoriteError && (
-        <p className="card__favorite-message" role="alert">
-          {favoriteError}
-        </p>
-      )}
+      <div className="card__favorite">
+        {!isLoading && (
+          isAuthenticated ? (
+            <button
+              className="card__favorite-button"
+              type="button"
+              disabled={isSaving || favoriteSaved}
+              onClick={handleSaveFavorite}
+            >
+              {isSaving
+                ? 'Guardando...'
+                : favoriteSaved
+                  ? 'Guardado'
+                  : 'Guardar en favoritos'}
+            </button>
+          ) : (
+            <button
+              className="card__favorite-button"
+              type="button"
+              onClick={handleSaveFavorite}
+            >
+              Iniciar sesión para guardar
+            </button>
+          )
+        )}
+        {favoriteError && (
+          <p className="card__favorite-message" role="alert">
+            {favoriteError}
+          </p>
+        )}
+      </div>
     </li>
   )
 }
