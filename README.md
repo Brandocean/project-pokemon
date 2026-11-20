@@ -112,4 +112,5 @@ La compilación del cliente se genera en `client/dist/`.
 
 ## Despliegue
 
-El despliegue de la versión integrada de la etapa 2 aún está pendiente: falta publicar la API y configurar el cliente con su URL de producción y el CORS correspondiente. La [versión publicada del frontend](https://project-pokemon-alpha.vercel.app/) puede no incluir los cambios full stack; no hay una URL de producción de la API disponible todavía.
+- [Client](https://project-pokemon-sage.vercel.app)
+- [Server](https://project-pokemon-server.vercel.app)
