@@ -1,4 +1,17 @@
+@media screen and (min-height: 480px) {
+  .auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.auth-page {
+  min-height: 100vh;
+}
+
 .auth-form {
+  width: 100%;
   max-width: 560px;
   margin: 0 auto;
   padding: 32px;

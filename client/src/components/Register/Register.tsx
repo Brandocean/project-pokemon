@@ -45,7 +45,7 @@ function Register() {
   }
 
   return (
-    <main className="content">
+    <main className="content auth-page">
       <section className="register" aria-labelledby="register-title">
         <h1 className="content__title" id="register-title">Crear cuenta</h1>
         <form className="register__form" onSubmit={handleSubmit}>

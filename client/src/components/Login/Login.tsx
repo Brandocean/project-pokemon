@@ -45,7 +45,7 @@ function Login() {
   }
 
   return (
-    <main className="content">
+    <main className="content auth-page">
       <section className="auth-form" aria-labelledby="login-title">
         <h1 className="content__title" id="login-title">Iniciar sesión</h1>
         <form className="auth-form__form" onSubmit={handleSubmit}>
