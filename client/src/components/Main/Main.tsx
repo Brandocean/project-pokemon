@@ -3,6 +3,7 @@ import PokemonCard from '../PokemonCard/PokemonCard'
 import Loader from '../Loader/Loader'
 import Popup from '../Popup/Popup'
 import SearchForm from '../SearchForm/SearchForm'
+import PokemonDetailsContent from '../PokemonDetailsContent/PokemonDetailsContent'
 import { ApiError, api } from '../../utils/api'
 import type { PokemonDetail } from '../../types/types'
 import { PAGE_SIZE } from '../../config/constants'
@@ -171,16 +172,6 @@ function Main() {
     ? selectedPokemon.name.charAt(0).toUpperCase()
       + selectedPokemon.name.slice(1)
     : ''
-  const pokemonImage = selectedPokemon?.sprites.other?.['official-artwork']?.front_default
-    || selectedPokemon?.sprites.front_default
-  const statNames: Record<string, string> = {
-    hp: 'PS',
-    attack: 'Ataque',
-    defense: 'Defensa',
-    'special-attack': 'Ataque especial',
-    'special-defense': 'Defensa especial',
-    speed: 'Velocidad',
-  }
 
   return (
     <main className="content">
@@ -252,34 +243,7 @@ function Main() {
         onClose={handleClosePopup}
       >
         {selectedPokemon && (
-          <>
-            {pokemonImage && (
-              <img
-                className="popup__image"
-                src={pokemonImage}
-                alt={`Imagen de ${pokemonName}`}
-              />
-            )}
-            <p className="popup__measurements">
-              <span>Altura: {selectedPokemon.height / 10} m</span>
-              <span>Peso: {selectedPokemon.weight / 10} kg</span>
-            </p>
-            <h3 className="popup__section-title">Tipos</h3>
-            <ul className="popup__types">
-              {selectedPokemon.types.map(({ slot, type }) => (
-                <li className="popup__type" key={slot}>{type.name}</li>
-              ))}
-            </ul>
-            <h3 className="popup__section-title">Estadísticas</h3>
-            <ul className="popup__stats">
-              {selectedPokemon.stats.map(({ stat, base_stat }) => (
-                <li className="popup__stat" key={stat.name}>
-                  <span>{statNames[stat.name] ?? stat.name}</span>
-                  <strong>{base_stat}</strong>
-                </li>
-              ))}
-            </ul>
-          </>
+          <PokemonDetailsContent pokemon={selectedPokemon} />
         )}
       </Popup>
     </main>

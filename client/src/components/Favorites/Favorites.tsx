@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCurrentUser } from '../../contexts/CurrentUserContext'
-import type { FavoriteData } from '../../types/types'
+import type { FavoriteData, PokemonDetail } from '../../types/types'
 import { ApiRequestError } from '../../utils/apiRequest'
 import { getFavorites, removeFavorite } from '../../utils/backendApi'
+import { api } from '../../utils/api'
 import Loader from '../Loader/Loader'
 import { useToast } from '../../contexts/ToastContext'
+import Popup from '../Popup/Popup'
+import PokemonDetailsContent from '../PokemonDetailsContent/PokemonDetailsContent'
 
 function Favorites() {
   const { notify } = useToast()
@@ -15,6 +18,11 @@ function Favorites() {
   const [removingId, setRemovingId] = useState<string | null>(null)
   const [removalMessage, setRemovalMessage] = useState('')
   const [retryCount, setRetryCount] = useState(0)
+  const [selectedFavorite, setSelectedFavorite] = useState<FavoriteData | null>(null)
+  const [selectedPokemon, setSelectedPokemon] = useState<PokemonDetail | null>(null)
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false)
+  const [detailsError, setDetailsError] = useState('')
+  const detailsRequestId = useRef(0)
   const { logout } = useCurrentUser()
   const navigate = useNavigate()
 
@@ -60,6 +68,39 @@ function Favorites() {
     setIsLoading(true)
     setErrorMessage('')
     setRetryCount((count) => count + 1)
+  }
+
+  const handleOpenDetails = async (favorite: FavoriteData) => {
+    const requestId = ++detailsRequestId.current
+    setSelectedFavorite(favorite)
+    setSelectedPokemon(null)
+    setDetailsError('')
+    setIsLoadingDetails(true)
+
+    try {
+      const pokemon = await api.getPokemonDetail(String(favorite.pokemonId))
+      if (requestId === detailsRequestId.current) {
+        setSelectedPokemon(pokemon)
+      }
+    } catch (error: unknown) {
+      if (requestId === detailsRequestId.current) {
+        setDetailsError(error instanceof Error
+          ? error.message
+          : 'No se pudieron cargar los detalles del Pokémon.')
+      }
+    } finally {
+      if (requestId === detailsRequestId.current) {
+        setIsLoadingDetails(false)
+      }
+    }
+  }
+
+  const handleCloseDetails = () => {
+    detailsRequestId.current += 1
+    setSelectedFavorite(null)
+    setSelectedPokemon(null)
+    setDetailsError('')
+    setIsLoadingDetails(false)
   }
 
   const handleRemove = async (favorite: FavoriteData) => {
@@ -141,7 +182,12 @@ function Favorites() {
 
             return (
               <li className="card" key={favorite._id}>
-                <div className="card__button">
+                <button
+                  className="card__button"
+                  type="button"
+                  aria-label={`Ver detalles de ${name}`}
+                  onClick={() => void handleOpenDetails(favorite)}
+                >
                   <img
                     className="card__image"
                     src={favorite.image}
@@ -155,29 +201,57 @@ function Favorites() {
                       #{String(favorite.pokemonId).padStart(3, '0')}
                     </span>
                   </span>
-                  <ul className="favorite-card__types" aria-label="Tipos">
-                    {favorite.types.map((type) => (
-                      <li className="favorite-card__type" key={type}>
-                        {type}
-                      </li>
-                    ))}
-                  </ul>
-                  <button
-                    className="favorite-card__remove"
-                    type="button"
-                    disabled={removingId === favorite._id}
-                    onClick={() => void handleRemove(favorite)}
-                  >
-                    {removingId === favorite._id
-                      ? 'Eliminando...'
-                      : 'Eliminar favorito'}
-                  </button>
-                </div>
+                </button>
+                <ul className="favorite-card__types" aria-label="Tipos">
+                  {favorite.types.map((type) => (
+                    <li className="favorite-card__type" key={type}>
+                      {type}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  className="favorite-card__remove"
+                  type="button"
+                  disabled={removingId === favorite._id}
+                  onClick={() => void handleRemove(favorite)}
+                >
+                  {removingId === favorite._id
+                    ? 'Eliminando...'
+                    : 'Eliminar favorito'}
+                </button>
               </li>
             )
           })}
         </ul>
       )}
+      <Popup
+        isOpen={selectedFavorite !== null}
+        title={selectedFavorite
+          ? `${selectedFavorite.name.charAt(0).toUpperCase()}${selectedFavorite.name.slice(1)} #${String(selectedFavorite.pokemonId).padStart(3, '0')}`
+          : ''}
+        onClose={handleCloseDetails}
+      >
+        {selectedPokemon && (
+          <PokemonDetailsContent pokemon={selectedPokemon} />
+        )}
+        {isLoadingDetails && <Loader text="Cargando detalles..." />}
+        {!isLoadingDetails && detailsError && (
+          <div className="error-message" role="alert">
+            <p className="error-message__text">
+              No se pudieron cargar los detalles. {detailsError}
+            </p>
+            {selectedFavorite && (
+              <button
+                className="error-message__button"
+                type="button"
+                onClick={() => void handleOpenDetails(selectedFavorite)}
+              >
+                Reintentar
+              </button>
+            )}
+          </div>
+        )}
+      </Popup>
     </main>
   )
 }
