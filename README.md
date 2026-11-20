@@ -1,52 +1,64 @@
-# Pokédex
+# Pokédex Full Stack
 
-Aplicación web creada con React, TypeScript y Vite que consulta la [PokéAPI](https://pokeapi.co/). Permite explorar Pokémon, buscar por nombre y ver sus datos en una ventana de detalle.
-
-## Aplicación
-
-[Abrir la aplicación](https://project-pokemon-alpha.vercel.app/)
+Aplicación web para explorar Pokémon con la [PokéAPI](https://pokeapi.co/), crear una cuenta y guardar favoritos personales. El cliente está construido con React, TypeScript y Vite; el servidor ofrece una API REST con Express y persiste usuarios y favoritos en MongoDB.
 
 ## Funcionalidades
 
-- Lista inicial de Pokémon con paginación.
-- Búsqueda por coincidencias parciales en el nombre.
-- Mensaje y acción para volver a la lista cuando no hay resultados.
-- Ventana de detalle con imagen, tipos, altura, peso y estadísticas.
-- Página «Sobre el autor» con enlaces a redes sociales y portafolio.
-- Estados de carga y error, navegación responsiva y soporte de teclado.
+- Registro, inicio y cierre de sesión con autenticación JWT.
+- Rutas protegidas: las personas sin sesión solo pueden acceder al registro y al inicio de sesión.
+- Listado paginado de Pokémon, búsqueda por nombre y ventana con detalles, estadísticas, tipos, altura y peso.
+- Favoritos asociados a la cuenta: guardar, consultar, abrir detalles y eliminar sin recargar la página.
+- Página «Sobre el autor».
+- Menú de navegación adaptable a móviles, estados de carga y error, opción de reintento y notificaciones accesibles.
+- API con validación de datos, autorización por usuario y límites de intentos en registro e inicio de sesión.
 
 ## Tecnologías
 
-- React 19
-- TypeScript
-- Vite
-- React Router
-- PokéAPI
+- **Cliente:** React 19, TypeScript, Vite y React Router.
+- **Servidor:** Node.js, Express 5 y TypeScript.
+- **Base de datos:** MongoDB con Mongoose.
+- **Autenticación:** JWT y bcrypt.
+- **APIs externas:** PokéAPI.
 
 ## Estructura del proyecto
 
-- `client/`: aplicación React con Vite.
-- `server/`: servidor Node.js, Express y TypeScript, preparado para conectar con MongoDB Atlas.
+- `client/`: aplicación React.
+- `server/`: API REST, modelos y conexión a MongoDB.
 
 ## Requisitos
 
-- Node.js y npm instalados.
+- Node.js y npm.
+- Una base de datos MongoDB local o una instancia de MongoDB Atlas accesible desde tu red.
 
-## Instalación y ejecución
+## Instalación y ejecución local
 
-Desde la raíz de este repositorio:
+Desde la raíz del repositorio, instala las dependencias y crea los archivos de entorno locales:
 
 ```bash
 npm run install:all
 cp -n server/.env.example server/.env
+cp -n client/.env.example client/.env
+```
+
+Configura `server/.env` con una URI válida de MongoDB (`MONGO_URI`) y un secreto JWT (`JWT_SECRET`). Los valores `PORT=3001` y `CLIENT_ORIGIN=http://localhost:3000` corresponden a la configuración local. No compartas ni subas los archivos `.env`, la URI de la base de datos ni el secreto.
+
+`client/.env` usa `VITE_API_URL=http://localhost:3001` para el backend local y `VITE_POKE_API_URL=https://pokeapi.co/api/v2/` para PokéAPI. Estos son los valores de desarrollo; para un despliegue se deben configurar las URL de producción.
+
+Inicia cada servicio desde la raíz en una terminal separada:
+
+```bash
+npm run dev:server
+```
+
+```bash
 npm run dev:client
 ```
 
-Vite muestra la dirección local en la terminal (por defecto, `http://localhost:3000`). Cuando el servidor Atlas esté configurado, inicia el backend en otra terminal con `npm run dev:server`.
+El cliente queda disponible en `http://localhost:3000` y el endpoint de salud de la API en `http://localhost:3001/health`. El servidor necesita conectarse correctamente a MongoDB para iniciar.
 
-Antes de iniciar el servidor, configura `server/.env` con tus valores locales: `MONGO_URI`, `PORT`, `JWT_SECRET` y `CLIENT_ORIGIN`. La URI de MongoDB y el secreto JWT no deben compartirse ni subirse al repositorio. El servidor carga estas variables mediante `dotenv`.
+## API
 
-`client/.env.example` incluye las URL base para desarrollo local: `VITE_API_URL` apunta al backend (`http://localhost:3001`) y `VITE_POKE_API_URL` a PokéAPI (`https://pokeapi.co/api/v2/`). Configura `VITE_API_URL` con la URL del backend cuando este esté desplegado.
+Las rutas están organizadas por recurso bajo `server/src/routes/`. `POST /signup`, `POST /signin` y `GET /health` son públicas; las rutas de `/users` y `/favorites` requieren JWT.
 
 ## Errores de la API
 
@@ -80,7 +92,7 @@ Requiere `Authorization: Bearer <token>` y un JSON con `pokemonId` (entero posit
 
 Requiere `Authorization: Bearer <token>`. El `id` debe ser un ObjectId válido. Si el favorito pertenece al usuario, se elimina y responde `200` con el registro eliminado; devuelve `400` si el id es inválido, `403` si pertenece a otro usuario y `404` si no existe.
 
-## Comandos disponibles
+## Comandos de validación
 
 ```bash
 cd client
@@ -89,4 +101,15 @@ npm run build    # Verifica TypeScript y genera la versión de producción
 npm run preview  # Sirve localmente la compilación de producción
 ```
 
+```bash
+cd server
+npm run lint     # Ejecuta ESLint
+npm run build    # Compila TypeScript
+npm start        # Inicia el servidor compilado (requiere server/.env)
+```
+
 La compilación del cliente se genera en `client/dist/`.
+
+## Despliegue
+
+El despliegue de la versión integrada de la etapa 2 aún está pendiente: falta publicar la API y configurar el cliente con su URL de producción y el CORS correspondiente. La [versión publicada del frontend](https://project-pokemon-alpha.vercel.app/) puede no incluir los cambios full stack; no hay una URL de producción de la API disponible todavía.
